@@ -1,10 +1,7 @@
 package com.callumwong.calculator;
 
-import com.formdev.flatlaf.FlatDarculaLaf;
-
 import javax.script.ScriptEngineManager;
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.text.PlainDocument;
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -17,6 +14,7 @@ public class CalculatorGui {
     private final ScriptEngineManager scriptEngineManager;
     private final ArrayList<JButton> numberButtons = new ArrayList<>();
     private final ArrayList<JButton> otherButtons = new ArrayList<>();
+    private JMenuBar menuBar;
     private JTextField textField;
 
     private int yOffset;
@@ -24,26 +22,44 @@ public class CalculatorGui {
     private int buttonHeight;
 
     public CalculatorGui(String title, Dimension size) {
-        scriptEngineManager = new ScriptEngineManager();
         frame = new JFrame();
         frame.setPreferredSize(new Dimension(size.width + 15, size.height + 39));
+        scriptEngineManager = new ScriptEngineManager();
 
         yOffset = size.height / 5;
         buttonWidth = size.width / 4;
         buttonHeight = (size.height - yOffset) / 5;
 
+        addMenuBar();
         addTextField(size);
         addNumberButtons(size);
         addOtherButtons(size);
 
         frame.setLayout(null);
-//        frame.setLayout(new GridBagLayout());
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setTitle(title);
         frame.setVisible(true);
         frame.setResizable(false);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+    }
+
+    private void addMenuBar() {
+        menuBar = new JMenuBar();
+
+        JMenu fileMenu = new JMenu("File");
+        menuBar.add(fileMenu);
+
+        JMenuItem preferencesItem = new JMenuItem("Preferences", KeyEvent.VK_P);
+        preferencesItem.addActionListener(e -> new PreferencesGui(new Dimension(800, 600)));
+
+        JMenuItem aboutItem = new JMenuItem("About", KeyEvent.VK_A);
+        aboutItem.addActionListener(e -> new AboutGui(new Dimension(200, 300)));
+
+        fileMenu.add(preferencesItem);
+        fileMenu.add(aboutItem);
+
+        frame.setJMenuBar(menuBar);
     }
 
     private void addTextField(Dimension size) {
@@ -154,7 +170,7 @@ public class CalculatorGui {
         numberButtons.forEach(button -> button.setFont(new Font("Verdana", Font.PLAIN, 24)));
     }
 
-    public JTextField getTextField() {
-        return textField;
+    public JFrame getFrame() {
+        return frame;
     }
 }
