@@ -1,5 +1,7 @@
 package com.callumwong.calculator;
 
+import com.formdev.flatlaf.FlatDarculaLaf;
+
 import javax.script.ScriptEngineManager;
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -95,10 +97,7 @@ public class CalculatorGui {
 
         otherButtons.get(0).addActionListener(e -> textField.setText(textField.getText() + ".")); // .
         otherButtons.get(1).addActionListener(e -> textField.setText(textField.getText() + "%")); // %
-        otherButtons.get(2).addActionListener(e -> {
-            textField.setText("");
-            textField.setBackground(Color.white);
-        }); // C
+        otherButtons.get(2).addActionListener(e -> textField.setText("")); // C
         otherButtons.get(3).addActionListener(e -> {
             if (textField.getText().isEmpty()) return;
             if (MathUtils.isNumeric(textField.getText())) {

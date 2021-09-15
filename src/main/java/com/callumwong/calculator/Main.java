@@ -1,5 +1,7 @@
 package com.callumwong.calculator;
 
+import com.formdev.flatlaf.FlatDarkLaf;
+
 import java.awt.*;
 
 public class Main {
@@ -7,6 +9,8 @@ public class Main {
     private CalculatorGui gui;
 
     private Main() {
+        FlatDarkLaf.setup();
+
         gui = new CalculatorGui("Calculator", new Dimension(400, 600));
     }
 
