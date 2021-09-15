@@ -1,4 +1,6 @@
-package com.callumwong.calculator;
+package com.callumwong.calculator.gui;
+
+import com.callumwong.calculator.Main;
 
 import javax.swing.*;
 import java.awt.*;
@@ -6,7 +8,9 @@ import java.awt.*;
 public class LicenseGui {
     public LicenseGui(Dimension size) {
         JDialog dialog = new JDialog(Main.getInstance().getGui().getFrame(), "License");
+
         JTextArea textArea = new JTextArea();
+        textArea.setEditable(false);
         textArea.setText(
                 "This is free and unencumbered software released into the public domain.\n" +
                 "\n" +
@@ -33,6 +37,7 @@ public class LicenseGui {
                 "\n" +
                 "For more information, please refer to <https://unlicense.org>"
         );
+
         dialog.add(textArea);
         dialog.setSize(size);
         dialog.setLocationRelativeTo(null);

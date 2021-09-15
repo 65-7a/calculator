@@ -1,4 +1,6 @@
-package com.callumwong.calculator;
+package com.callumwong.calculator.gui;
+
+import com.callumwong.calculator.Main;
 
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;

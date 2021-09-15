@@ -1,9 +1,15 @@
-package com.callumwong.calculator;
+package com.callumwong.calculator.gui;
+
+import com.callumwong.calculator.Main;
+import com.callumwong.calculator.util.DigitFilter;
+import com.callumwong.calculator.util.MathUtils;
 
 import javax.script.ScriptEngineManager;
 import javax.swing.*;
 import javax.swing.text.PlainDocument;
 import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.math.BigDecimal;
@@ -16,6 +22,7 @@ public class CalculatorGui {
     private final ArrayList<JButton> otherButtons = new ArrayList<>();
     private JMenuBar menuBar;
     private JTextField textField;
+    private Timer recalculateTimer = new Timer(400, null);
 
     private int yOffset;
     private int buttonWidth;
@@ -35,13 +42,29 @@ public class CalculatorGui {
         addNumberButtons(size);
         addOtherButtons(size);
 
+        recalculateTimer.setRepeats(false);
+        recalculateTimer.addActionListener(e -> {
+            Main.getInstance().restartGui(new Dimension(frame.getWidth(), frame.getHeight()));
+            frame.dispose();
+        });
+
         frame.setLayout(null);
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setTitle(title);
         frame.setVisible(true);
-        frame.setResizable(false);
+        frame.setResizable(true);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        frame.getRootPane().addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                if (recalculateTimer.isRunning()) {
+                    recalculateTimer.restart();
+                } else {
+                    recalculateTimer.start();
+                }
+            }
+        });
     }
 
     private void addMenuBar() {
@@ -109,7 +132,7 @@ public class CalculatorGui {
         otherButtons.add(addOtherButton("*", buttonWidth * 3, yOffset + buttonHeight));
         otherButtons.add(addOtherButton("-", buttonWidth * 3, yOffset + buttonHeight * 2));
         otherButtons.add(addOtherButton("+", buttonWidth * 3, yOffset + buttonHeight * 3));
-        otherButtons.add(addOtherButton("=", buttonWidth * 3, yOffset + buttonHeight * 4));
+        otherButtons.add(addOtherButton("=", buttonWidth * 3, size.height - buttonHeight));
 
         otherButtons.get(0).addActionListener(e -> textField.setText(textField.getText() + ".")); // .
         otherButtons.get(1).addActionListener(e -> textField.setText(textField.getText() + "%")); // %

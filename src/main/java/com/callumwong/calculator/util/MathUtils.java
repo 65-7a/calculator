@@ -1,4 +1,4 @@
-package com.callumwong.calculator;
+package com.callumwong.calculator.util;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptException;

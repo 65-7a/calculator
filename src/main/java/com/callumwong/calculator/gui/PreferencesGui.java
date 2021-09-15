@@ -1,4 +1,4 @@
-package com.callumwong.calculator;
+package com.callumwong.calculator.gui;
 
 import javax.swing.*;
 import java.awt.*;
