@@ -32,15 +32,7 @@ public class CalculatorGui {
         textField.setFont(new Font("Verdana", Font.PLAIN, 24));
         frame.getContentPane().add(textField);
         ((PlainDocument) textField.getDocument()).setDocumentFilter(new DigitFilter());
-
-        yOffset = size.height / 5;
-        buttonWidth = size.width / 4;
-        buttonHeight = (size.height - yOffset) / 5;
-
-        addNumberButtons(size);
-        addOtherButtons(size);
-
-        frame.addKeyListener(new KeyListener() {
+        textField.addKeyListener(new KeyListener() {
             @Override
             public void keyTyped(KeyEvent e) {
             }
@@ -57,6 +49,13 @@ public class CalculatorGui {
             }
         });
 
+        yOffset = size.height / 5;
+        buttonWidth = size.width / 4;
+        buttonHeight = (size.height - yOffset) / 5;
+
+        addNumberButtons(size);
+        addOtherButtons(size);
+
         frame.setLayout(null);
 //        frame.setLayout(new GridBagLayout());
         frame.pack();
@@ -69,12 +68,18 @@ public class CalculatorGui {
 
     private void addOtherButtons(Dimension size) {
         otherButtons.add(addOtherButton(".", 0, size.height - buttonHeight));
-        otherButtons.add(addOtherButton("=", buttonWidth * 2, size.height - buttonHeight));
+        otherButtons.add(addOtherButton("%", buttonWidth * 2, size.height - buttonHeight));
         otherButtons.add(addOtherButton("C", 0, yOffset));
         otherButtons.add(addOtherButton("±", buttonWidth, yOffset));
+        otherButtons.add(addOtherButton("π", buttonWidth * 2, yOffset));
+        otherButtons.add(addOtherButton("÷", buttonWidth * 3, yOffset));
+        otherButtons.add(addOtherButton("*", buttonWidth * 3, yOffset + buttonHeight));
+        otherButtons.add(addOtherButton("-", buttonWidth * 3, yOffset + buttonHeight * 2));
+        otherButtons.add(addOtherButton("+", buttonWidth * 3, yOffset + buttonHeight * 3));
+        otherButtons.add(addOtherButton("=", buttonWidth * 3, yOffset + buttonHeight * 4));
 
         otherButtons.get(0).addActionListener(e -> textField.setText(textField.getText() + ".")); // .
-        otherButtons.get(1).addActionListener(e -> textField.setText(MathUtils.evaluateExpression(textField.getText(), scriptEngineManager.getEngineByName("JavaScript")))); // =
+        otherButtons.get(1).addActionListener(e -> textField.setText(textField.getText() + "%")); // %
         otherButtons.get(2).addActionListener(e -> {
             textField.setText("");
             textField.setBackground(Color.white);
@@ -92,6 +97,12 @@ public class CalculatorGui {
                 }
             }
         }); // ±
+        otherButtons.get(4).addActionListener(e -> textField.setText(textField.getText() + "3.14159265359")); // π
+        otherButtons.get(5).addActionListener(e -> textField.setText(textField.getText() + "/")); // ÷
+        otherButtons.get(6).addActionListener(e -> textField.setText(textField.getText() + "*")); // /
+        otherButtons.get(7).addActionListener(e -> textField.setText(textField.getText() + "-")); // -
+        otherButtons.get(8).addActionListener(e -> textField.setText(textField.getText() + "+")); // +
+        otherButtons.get(9).addActionListener(e -> textField.setText(MathUtils.evaluateExpression(textField.getText(), scriptEngineManager.getEngineByName("JavaScript")))); // =
 
         otherButtons.forEach(button -> button.setFont(new Font("Verdana", Font.PLAIN, 24)));
     }

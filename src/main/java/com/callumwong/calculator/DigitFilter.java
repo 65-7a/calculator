@@ -43,6 +43,6 @@ public class DigitFilter extends DocumentFilter {
                 || c == '+'
                 || c == '-'
                 || c == '(' || c == ')'
-                ;
+                || c == '%';
     }
 }
