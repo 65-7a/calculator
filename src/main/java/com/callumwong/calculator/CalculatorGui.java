@@ -2,6 +2,7 @@ package com.callumwong.calculator;
 
 import javax.script.ScriptEngineManager;
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.text.PlainDocument;
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -14,23 +15,53 @@ public class CalculatorGui {
     private final ScriptEngineManager scriptEngineManager;
     private final ArrayList<JButton> numberButtons = new ArrayList<>();
     private final ArrayList<JButton> otherButtons = new ArrayList<>();
-    private final JTextField textField;
+    private JTextField textField;
 
     private int yOffset;
     private int buttonWidth;
     private int buttonHeight;
 
     public CalculatorGui(String title, Dimension size) {
+        scriptEngineManager = new ScriptEngineManager();
         frame = new JFrame();
         frame.setPreferredSize(new Dimension(size.width + 15, size.height + 39));
 
-        scriptEngineManager = new ScriptEngineManager();
+        yOffset = size.height / 5;
+        buttonWidth = size.width / 4;
+        buttonHeight = (size.height - yOffset) / 5;
 
+        addTextField(size);
+        addNumberButtons(size);
+        addOtherButtons(size);
+
+        frame.setLayout(null);
+//        frame.setLayout(new GridBagLayout());
+        frame.pack();
+        frame.setLocationRelativeTo(null);
+        frame.setTitle(title);
+        frame.setVisible(true);
+        frame.setResizable(false);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+    }
+
+    private void addTextField(Dimension size) {
         textField = new JTextField();
-        textField.setBounds(0, 0, size.width, size.height / 5);
+        textField.setBounds(0, 0, size.width - size.width / 8, size.height / 5);
         textField.setHorizontalAlignment(JTextField.CENTER);
         textField.setFont(new Font("Verdana", Font.PLAIN, 24));
         frame.getContentPane().add(textField);
+
+        JButton backspaceButton = new JButton("⌫");
+        backspaceButton.setFocusable(false);
+        backspaceButton.setBounds(size.width - size.width / 8, 0, size.width / 8, size.height / 5);
+        backspaceButton.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 12));
+        backspaceButton.addActionListener(e -> {
+            String str = textField.getText();
+            if (str.length() <= 0) return;
+            textField.setText(str.substring(0, str.length() - 1));
+        });
+        frame.getContentPane().add(backspaceButton);
+
         ((PlainDocument) textField.getDocument()).setDocumentFilter(new DigitFilter());
         textField.addKeyListener(new KeyListener() {
             @Override
@@ -48,22 +79,6 @@ public class CalculatorGui {
             public void keyReleased(KeyEvent e) {
             }
         });
-
-        yOffset = size.height / 5;
-        buttonWidth = size.width / 4;
-        buttonHeight = (size.height - yOffset) / 5;
-
-        addNumberButtons(size);
-        addOtherButtons(size);
-
-        frame.setLayout(null);
-//        frame.setLayout(new GridBagLayout());
-        frame.pack();
-        frame.setLocationRelativeTo(null);
-        frame.setTitle(title);
-        frame.setVisible(true);
-        frame.setResizable(false);
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
 
     private void addOtherButtons(Dimension size) {
