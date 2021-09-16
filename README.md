@@ -1,2 +1,2 @@
-# calculator
-Simple Java GUI calculator using Swing.
+# Calculator
+Simple Java GUI calculator using Swing and FlatLaf.
