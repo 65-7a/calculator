@@ -25,8 +25,8 @@ public class Main {
         getInstance();
     }
 
-    public void restartGui(Dimension size) {
-        gui = new CalculatorGui("Calculator", new Dimension(size));
+    public void restartGui(Dimension size, String contents) {
+        gui = new CalculatorGui("Calculator", new Dimension(size), contents);
     }
 
     public CalculatorGui getGui() {

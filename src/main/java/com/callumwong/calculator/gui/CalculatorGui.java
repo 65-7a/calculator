@@ -20,13 +20,13 @@ public class CalculatorGui {
     private final ArrayList<JButton> otherButtons = new ArrayList<>();
     private JMenuBar menuBar;
     private JTextField textField;
-    private Timer recalculateTimer = new Timer(400, null);
+    private Timer resizeTimer = new Timer(400, null);
 
     private int yOffset;
     private int buttonWidth;
     private int buttonHeight;
 
-    public CalculatorGui(String title, Dimension size) {
+    public CalculatorGui(String title, Dimension size, String contents) {
         frame = new JFrame();
         frame.setPreferredSize(new Dimension(size.width + 15, size.height + 39));
 
@@ -35,13 +35,13 @@ public class CalculatorGui {
         buttonHeight = (size.height - yOffset) / 6;
 
         addMenuBar();
-        addTextField(size);
+        addTextField(size, contents);
         addNumberButtons(size);
         addOtherButtons(size);
 
-        recalculateTimer.setRepeats(false);
-        recalculateTimer.addActionListener(e -> {
-            Main.getInstance().restartGui(new Dimension(frame.getWidth(), frame.getHeight()));
+        resizeTimer.setRepeats(false);
+        resizeTimer.addActionListener(e -> {
+            Main.getInstance().restartGui(new Dimension(frame.getWidth(), frame.getHeight()), textField.getText());
             frame.dispose();
         });
 
@@ -55,13 +55,17 @@ public class CalculatorGui {
         frame.getRootPane().addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
-                if (recalculateTimer.isRunning()) {
-                    recalculateTimer.restart();
+                if (resizeTimer.isRunning()) {
+                    resizeTimer.restart();
                 } else {
-                    recalculateTimer.start();
+                    resizeTimer.start();
                 }
             }
         });
+    }
+
+    public CalculatorGui(String title, Dimension size) {
+        this(title, size, "");
     }
 
     private void addMenuBar() {
@@ -82,11 +86,12 @@ public class CalculatorGui {
         frame.setJMenuBar(menuBar);
     }
 
-    private void addTextField(Dimension size) {
+    private void addTextField(Dimension size, String contents) {
         textField = new JTextField();
         textField.setBounds(0, 0, size.width - size.width / 8, size.height / 6);
         textField.setHorizontalAlignment(JTextField.CENTER);
         textField.setFont(new Font(UIManager.getDefaults().getFont("TextField.font").getName(), Font.PLAIN, 24));
+        textField.setText(contents);
         frame.getContentPane().add(textField);
 
         JButton backspaceButton = new JButton("⌫");
@@ -100,7 +105,7 @@ public class CalculatorGui {
         });
         frame.getContentPane().add(backspaceButton);
 
-        ((PlainDocument) textField.getDocument()).setDocumentFilter(new DigitFilter());
+//        ((PlainDocument) textField.getDocument()).setDocumentFilter(new DigitFilter());
         textField.addKeyListener(new KeyListener() {
             @Override
             public void keyTyped(KeyEvent e) {
@@ -112,8 +117,9 @@ public class CalculatorGui {
                     textField.setText(MathUtils.evaluateExpression(textField.getText()));
                 } else if (e.getKeyCode() == KeyEvent.VK_C
                         || ((e.getKeyCode() == KeyEvent.VK_BACK_SPACE || e.getKeyCode() == KeyEvent.VK_DELETE)
-                        && (e.getModifiersEx() & KeyEvent.CTRL_DOWN_MASK) == KeyEvent.CTRL_DOWN_MASK)) {
-                    textField.setText("");
+                        && (((e.getModifiersEx() & KeyEvent.CTRL_DOWN_MASK) == KeyEvent.CTRL_DOWN_MASK)
+                        || (e.getModifiersEx() & KeyEvent.META_DOWN_MASK) == KeyEvent.META_DOWN_MASK))) {
+                    SwingUtilities.invokeLater(() -> textField.setText(""));
                 }
             }
 
