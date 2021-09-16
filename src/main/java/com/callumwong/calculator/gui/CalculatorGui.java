@@ -3,18 +3,15 @@ package com.callumwong.calculator.gui;
 import com.callumwong.calculator.Main;
 import com.callumwong.calculator.util.DigitFilter;
 import com.callumwong.calculator.util.MathUtils;
-import net.miginfocom.swing.MigLayout;
 
 import javax.script.ScriptEngineManager;
 import javax.swing.*;
 import javax.swing.text.PlainDocument;
 import java.awt.*;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class CalculatorGui {
     private final JFrame frame;
@@ -45,12 +42,11 @@ public class CalculatorGui {
 
         recalculateTimer.setRepeats(false);
         recalculateTimer.addActionListener(e -> {
-            Main.getInstance().restartGui(new Dimension(frame.getWidth(), frame.getHeight()));
+            Main.getInstance().restartGui(new Dimension(frame.getWidth() + 15, frame.getHeight() + 39));
             frame.dispose();
         });
 
         frame.setLayout(null);
-        // TODO: Use MigLayout
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setTitle(title);

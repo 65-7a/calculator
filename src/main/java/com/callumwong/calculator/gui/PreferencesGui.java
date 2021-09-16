@@ -1,12 +1,10 @@
 package com.callumwong.calculator.gui;
 
 import com.callumwong.calculator.Main;
-import com.formdev.flatlaf.FlatDarculaLaf;
-import com.formdev.flatlaf.FlatDarkLaf;
-import com.formdev.flatlaf.FlatIntelliJLaf;
-import com.formdev.flatlaf.FlatLightLaf;
+import com.formdev.flatlaf.*;
 import com.formdev.flatlaf.intellijthemes.*;
-import javafx.scene.shape.Arc;
+import com.formdev.flatlaf.ui.JBRCustomDecorations;
+import com.formdev.flatlaf.util.SystemInfo;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -38,9 +36,54 @@ public class PreferencesGui {
         frame = new JFrame();
         frame.setPreferredSize(size);
 
-        JComboBox<String> lookAndFeelComboBox = new JComboBox<>(lookAndFeelStrings);
-        lookAndFeelComboBox.setSelectedIndex(6);
-        lookAndFeelComboBox.addActionListener(e -> {
+        JPanel panel = new JPanel();
+        panel.setLayout(new MigLayout());
+
+        JCheckBox windowDecorationsCheckBox = new JCheckBox();
+        windowDecorationsCheckBox.setSelected(true);
+        windowDecorationsCheckBox.addActionListener(e -> FlatLaf.setUseNativeWindowDecorations(windowDecorationsCheckBox.isSelected()));
+        JCheckBox underlineMenuSelectionCheckBox = new JCheckBox();
+        underlineMenuSelectionCheckBox.setSelected(false);
+        underlineMenuSelectionCheckBox.addActionListener(e -> UIManager.put("MenuItem.selectionType", underlineMenuSelectionCheckBox.isSelected() ? "underline" : null));
+
+        panel.add(new JLabel("Theme: "));
+        panel.add(themeComboBox(), "wrap");
+        panel.add(new JLabel("Window Decoratons: "));
+        panel.add(windowDecorationsCheckBox, "wrap");
+        panel.add(new JLabel("Underline Menu Selection: "));
+        panel.add(underlineMenuSelectionCheckBox, "wrap");
+
+        frame.setContentPane(panel);
+        frame.pack();
+        frame.setLocationRelativeTo(null);
+        frame.setTitle("Preferences");
+        frame.setVisible(true);
+        frame.setResizable(false);
+        frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+
+        if (FlatLaf.supportsNativeWindowDecorations()) {
+            if (JBRCustomDecorations.isSupported()) {
+                windowDecorationsCheckBox.setEnabled(false);
+            }
+        } else {
+            unsupported(windowDecorationsCheckBox);
+        }
+
+        if (SystemInfo.isMacOS) {
+            unsupported(underlineMenuSelectionCheckBox);
+        }
+    }
+
+    private void unsupported(JCheckBox menuItem) {
+        menuItem.setEnabled(false);
+        menuItem.setSelected(false);
+        menuItem.setToolTipText("Not supported on your system.");
+    }
+
+    private JComboBox<String> themeComboBox() {
+        JComboBox<String> themeComboBox = new JComboBox<>(lookAndFeelStrings);
+        themeComboBox.setSelectedIndex(6);
+        themeComboBox.addActionListener(e -> {
             try {
                 switch ((String) Objects.requireNonNull(((JComboBox<?>) e.getSource()).getSelectedItem())) {
                     case "Metal":
@@ -104,16 +147,6 @@ public class PreferencesGui {
             frame.pack();
         });
 
-        JLabel themeLabel = new JLabel("Theme ");
-        frame.getContentPane().add(themeLabel);
-        frame.getContentPane().add(lookAndFeelComboBox);
-
-        frame.setLayout(new MigLayout());
-        frame.pack();
-        frame.setLocationRelativeTo(null);
-        frame.setTitle("Preferences");
-        frame.setVisible(true);
-        frame.setResizable(false);
-        frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        return themeComboBox;
     }
 }
