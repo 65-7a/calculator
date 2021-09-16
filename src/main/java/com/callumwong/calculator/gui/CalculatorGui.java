@@ -8,10 +8,12 @@ import javax.script.ScriptEngineManager;
 import javax.swing.*;
 import javax.swing.text.PlainDocument;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class CalculatorGui {
     private final JFrame frame;
@@ -31,9 +33,9 @@ public class CalculatorGui {
         frame.setPreferredSize(new Dimension(size.width + 15, size.height + 39));
         scriptEngineManager = new ScriptEngineManager();
 
-        yOffset = size.height / 5;
+        yOffset = size.height / 6;
         buttonWidth = size.width / 4;
-        buttonHeight = (size.height - yOffset) / 5;
+        buttonHeight = (size.height - yOffset) / 6;
 
         addMenuBar();
         addTextField(size);
@@ -42,7 +44,7 @@ public class CalculatorGui {
 
         recalculateTimer.setRepeats(false);
         recalculateTimer.addActionListener(e -> {
-            Main.getInstance().restartGui(size);
+            Main.getInstance().restartGui(new Dimension(frame.getWidth(), frame.getHeight()));
             frame.dispose();
         });
 
@@ -85,14 +87,14 @@ public class CalculatorGui {
 
     private void addTextField(Dimension size) {
         textField = new JTextField();
-        textField.setBounds(0, 0, size.width - size.width / 8, size.height / 5);
+        textField.setBounds(0, 0, size.width - size.width / 8, size.height / 6);
         textField.setHorizontalAlignment(JTextField.CENTER);
         textField.setFont(new Font(UIManager.getDefaults().getFont("TextField.font").getName(), Font.PLAIN, 24));
         frame.getContentPane().add(textField);
 
         JButton backspaceButton = new JButton("⌫");
         backspaceButton.setFocusable(false);
-        backspaceButton.setBounds(size.width - size.width / 8, 0, size.width / 8, size.height / 5);
+        backspaceButton.setBounds(size.width - size.width / 8, 0, size.width / 8, size.height / 6);
         backspaceButton.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 12));
         backspaceButton.addActionListener(e -> {
             String str = textField.getText();
@@ -111,6 +113,10 @@ public class CalculatorGui {
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_EQUALS || e.getKeyCode() == KeyEvent.VK_ENTER) {
                     textField.setText(MathUtils.evaluateExpression(textField.getText(), scriptEngineManager.getEngineByName("JavaScript")));
+                } else if (e.getKeyCode() == KeyEvent.VK_C
+                        || ((e.getKeyCode() == KeyEvent.VK_BACK_SPACE || e.getKeyCode() == KeyEvent.VK_DELETE)
+                        && (e.getModifiersEx() & KeyEvent.CTRL_DOWN_MASK) == KeyEvent.CTRL_DOWN_MASK)) {
+                    textField.setText("");
                 }
             }
 
@@ -123,14 +129,22 @@ public class CalculatorGui {
     private void addOtherButtons(Dimension size) {
         otherButtons.add(addOtherButton(".", 0, size.height - buttonHeight));
         otherButtons.add(addOtherButton("%", buttonWidth * 2, size.height - buttonHeight));
-        otherButtons.add(addOtherButton("C", 0, yOffset));
-        otherButtons.add(addOtherButton("±", buttonWidth, yOffset));
-        otherButtons.add(addOtherButton("π", buttonWidth * 2, yOffset));
+        otherButtons.add(addOtherButton("C", 0, yOffset + buttonHeight));
+        otherButtons.add(addOtherButton("±", buttonWidth, yOffset + buttonHeight));
+        otherButtons.add(addOtherButton("π", buttonWidth * 2, yOffset + buttonHeight));
         otherButtons.add(addOtherButton("÷", buttonWidth * 3, yOffset));
         otherButtons.add(addOtherButton("*", buttonWidth * 3, yOffset + buttonHeight));
         otherButtons.add(addOtherButton("-", buttonWidth * 3, yOffset + buttonHeight * 2));
         otherButtons.add(addOtherButton("+", buttonWidth * 3, yOffset + buttonHeight * 3));
-        otherButtons.add(addOtherButton("=", buttonWidth * 3, size.height - buttonHeight));
+        otherButtons.add(addOtherButton("(", 0, yOffset));
+        otherButtons.add(addOtherButton(")", buttonWidth, yOffset));
+        otherButtons.add(addOtherButton("e", buttonWidth * 2, yOffset));
+
+        JButton equalsButton = new JButton("=");
+        equalsButton.setFocusable(false);
+        equalsButton.setBounds(buttonWidth * 3, size.height - buttonHeight * 2 - 2, buttonWidth, buttonHeight * 2 + 2);
+        frame.getContentPane().add(equalsButton);
+        otherButtons.add(equalsButton); // Special equals button
 
         otherButtons.get(0).addActionListener(e -> textField.setText(textField.getText() + ".")); // .
         otherButtons.get(1).addActionListener(e -> textField.setText(textField.getText() + "%")); // %
@@ -153,7 +167,10 @@ public class CalculatorGui {
         otherButtons.get(6).addActionListener(e -> textField.setText(textField.getText() + "*")); // /
         otherButtons.get(7).addActionListener(e -> textField.setText(textField.getText() + "-")); // -
         otherButtons.get(8).addActionListener(e -> textField.setText(textField.getText() + "+")); // +
-        otherButtons.get(9).addActionListener(e -> textField.setText(MathUtils.evaluateExpression(textField.getText(), scriptEngineManager.getEngineByName("JavaScript")))); // =
+        otherButtons.get(9).addActionListener(e -> textField.setText(textField.getText() + "(")); // (
+        otherButtons.get(10).addActionListener(e -> textField.setText(textField.getText() + ")")); // )
+        otherButtons.get(11).addActionListener(e -> textField.setText(textField.getText() + "2.71828182846")); // e
+        otherButtons.get(12).addActionListener(e -> textField.setText(MathUtils.evaluateExpression(textField.getText(), scriptEngineManager.getEngineByName("JavaScript")))); // =
 
         otherButtons.forEach(button -> button.setFont(new Font(UIManager.getDefaults().getFont("Button.font").getName(), Font.PLAIN, 24)));
     }
@@ -175,7 +192,7 @@ public class CalculatorGui {
             button.addActionListener(e -> textField.setText(textField.getText() + finalI));
         }
 
-        int numberButtonYOffset = yOffset + buttonHeight;
+        int numberButtonYOffset = yOffset + buttonHeight * 2;
         numberButtons.get(0).setBounds(buttonWidth, size.height - buttonHeight, buttonWidth, buttonHeight);
         numberButtons.get(1).setBounds(0, numberButtonYOffset, buttonWidth, buttonHeight);
         numberButtons.get(2).setBounds(buttonWidth, numberButtonYOffset, buttonWidth, buttonHeight);

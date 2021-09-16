@@ -16,7 +16,6 @@ public class PreferencesGui {
     private final String[] lookAndFeelStrings = {
             "Metal",
             "System",
-            "Motif",
             "Flat Light",
             "Flat Dark",
             "Flat IntelliJ",
@@ -40,10 +39,10 @@ public class PreferencesGui {
         panel.setLayout(new MigLayout());
 
         JCheckBox windowDecorationsCheckBox = new JCheckBox();
-        windowDecorationsCheckBox.setSelected(true);
+        windowDecorationsCheckBox.setSelected(FlatLaf.isUseNativeWindowDecorations());
         windowDecorationsCheckBox.addActionListener(e -> FlatLaf.setUseNativeWindowDecorations(windowDecorationsCheckBox.isSelected()));
         JCheckBox underlineMenuSelectionCheckBox = new JCheckBox();
-        underlineMenuSelectionCheckBox.setSelected(false);
+        underlineMenuSelectionCheckBox.setSelected(UIManager.get("MenuItem.selectionType") != null);
         underlineMenuSelectionCheckBox.addActionListener(e -> UIManager.put("MenuItem.selectionType", underlineMenuSelectionCheckBox.isSelected() ? "underline" : null));
 
         panel.add(new JLabel("Theme: "));
@@ -82,7 +81,37 @@ public class PreferencesGui {
 
     private JComboBox<String> themeComboBox() {
         JComboBox<String> themeComboBox = new JComboBox<>(lookAndFeelStrings);
-        themeComboBox.setSelectedIndex(6);
+        switch (UIManager.getLookAndFeel().getName()) {
+            case "Metal":
+                themeComboBox.setSelectedIndex(0);
+                break;
+            case "CDE/Motif":
+                themeComboBox.setSelectedIndex(1);
+                break;
+            case "FlatLaf Light":
+                themeComboBox.setSelectedIndex(2);
+                break;
+            case "FlatLaf Dark":
+                themeComboBox.setSelectedIndex(3);
+                break;
+            case "FlatLaf IntelliJ":
+                themeComboBox.setSelectedIndex(4);
+                break;
+            case "FlatLaf Darcula":
+                themeComboBox.setSelectedIndex(5);
+                break;
+            case "Cyan light":
+                themeComboBox.setSelectedItem("Cyan Light");
+                break;
+            case "Dark purple":
+                themeComboBox.setSelectedItem("Dark Purple");
+                break;
+            case "Gruvbox Dark Hard":
+                themeComboBox.setSelectedItem("Gruvbox");
+                break;
+            default:
+                themeComboBox.setSelectedItem(UIManager.getLookAndFeel().getName());
+        }
         themeComboBox.addActionListener(e -> {
             try {
                 switch ((String) Objects.requireNonNull(((JComboBox<?>) e.getSource()).getSelectedItem())) {
