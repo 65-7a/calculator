@@ -42,7 +42,7 @@ public class CalculatorGui {
 
         recalculateTimer.setRepeats(false);
         recalculateTimer.addActionListener(e -> {
-            Main.getInstance().restartGui(new Dimension(frame.getWidth() + 15, frame.getHeight() + 39));
+            Main.getInstance().restartGui(size);
             frame.dispose();
         });
 
