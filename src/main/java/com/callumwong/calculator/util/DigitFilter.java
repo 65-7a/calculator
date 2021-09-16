@@ -37,12 +37,13 @@ public class DigitFilter extends DocumentFilter {
      * @return true if it's valid, false if it should be removed.
      */
     public boolean accept(final char c) {
-        return Character.isDigit(c) || c == '.'
-                || c == '*'
-                || c == '/'
-                || c == '+'
-                || c == '-'
-                || c == '(' || c == ')'
-                || c == '%';
+        return Character.isLetterOrDigit(c);
+//        return Character.isDigit(c) || c == '.'
+//                || c == '*'
+//                || c == '/'
+//                || c == '+'
+//                || c == '-'
+//                || c == '(' || c == ')'
+//                || c == '%';
     }
 }
