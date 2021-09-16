@@ -1,7 +1,7 @@
 package com.callumwong.calculator;
 
 import com.callumwong.calculator.gui.CalculatorGui;
-import com.formdev.flatlaf.intellijthemes.FlatCarbonIJTheme;
+import com.formdev.flatlaf.intellijthemes.FlatNordIJTheme;
 
 import java.awt.*;
 
@@ -10,8 +10,7 @@ public class Main {
     private CalculatorGui gui;
 
     private Main() {
-        FlatCarbonIJTheme.setup();
-
+        FlatNordIJTheme.setup();
         gui = new CalculatorGui("Calculator", new Dimension(400, 600));
     }
 

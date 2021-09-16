@@ -3,6 +3,7 @@ package com.callumwong.calculator.gui;
 import com.callumwong.calculator.Main;
 import com.callumwong.calculator.util.DigitFilter;
 import com.callumwong.calculator.util.MathUtils;
+import net.miginfocom.swing.MigLayout;
 
 import javax.script.ScriptEngineManager;
 import javax.swing.*;
@@ -49,6 +50,7 @@ public class CalculatorGui {
         });
 
         frame.setLayout(null);
+        // TODO: Use MigLayout
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setTitle(title);
@@ -74,7 +76,7 @@ public class CalculatorGui {
         menuBar.add(fileMenu);
 
         JMenuItem preferencesItem = new JMenuItem("Preferences", KeyEvent.VK_P);
-        preferencesItem.addActionListener(e -> new PreferencesGui(new Dimension(800, 600)));
+        preferencesItem.addActionListener(e -> new PreferencesGui(new Dimension(400, 300)));
 
         JMenuItem aboutItem = new JMenuItem("About", KeyEvent.VK_A);
         aboutItem.addActionListener(e -> new AboutGui(new Dimension(200, 300)));
@@ -89,7 +91,7 @@ public class CalculatorGui {
         textField = new JTextField();
         textField.setBounds(0, 0, size.width - size.width / 8, size.height / 5);
         textField.setHorizontalAlignment(JTextField.CENTER);
-        textField.setFont(new Font("Verdana", Font.PLAIN, 24));
+        textField.setFont(new Font(UIManager.getDefaults().getFont("TextField.font").getName(), Font.PLAIN, 24));
         frame.getContentPane().add(textField);
 
         JButton backspaceButton = new JButton("⌫");
@@ -157,7 +159,7 @@ public class CalculatorGui {
         otherButtons.get(8).addActionListener(e -> textField.setText(textField.getText() + "+")); // +
         otherButtons.get(9).addActionListener(e -> textField.setText(MathUtils.evaluateExpression(textField.getText(), scriptEngineManager.getEngineByName("JavaScript")))); // =
 
-        otherButtons.forEach(button -> button.setFont(new Font("Verdana", Font.PLAIN, 24)));
+        otherButtons.forEach(button -> button.setFont(new Font(UIManager.getDefaults().getFont("Button.font").getName(), Font.PLAIN, 24)));
     }
 
     private JButton addOtherButton(String string, int x, int y) {
@@ -190,7 +192,7 @@ public class CalculatorGui {
         numberButtons.get(9).setBounds(buttonWidth * 2, numberButtonYOffset + buttonHeight * 2, buttonWidth, buttonHeight);
 
         numberButtons.forEach(button -> frame.getContentPane().add(button));
-        numberButtons.forEach(button -> button.setFont(new Font("Verdana", Font.PLAIN, 24)));
+        numberButtons.forEach(button -> button.setFont(new Font(UIManager.getDefaults().getFont("Button.font").getName(), Font.PLAIN, 24)));
     }
 
     public JFrame getFrame() {
