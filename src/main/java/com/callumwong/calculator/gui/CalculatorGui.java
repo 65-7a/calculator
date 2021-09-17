@@ -37,7 +37,7 @@ public class CalculatorGui {
         addOtherButtons(size);
 
         resizeTimer.setRepeats(false);
-        resizeTimer.addActionListener(e -> {
+        resizeTimer.addActionListener(e -> { 
             Main.getInstance().restartGui(new Dimension(frame.getWidth(), frame.getHeight()), textField.getText());
             frame.dispose();
         });
@@ -128,7 +128,7 @@ public class CalculatorGui {
 
     private void addOtherButtons(Dimension size) {
         otherButtons.add(addOtherButton(".", 0, size.height - buttonHeight));
-        otherButtons.add(addOtherButton("%", buttonWidth * 2, size.height - buttonHeight));
+        otherButtons.add(addOtherButton("x²", buttonWidth * 2, size.height - buttonHeight));
         otherButtons.add(addOtherButton("C", 0, yOffset + buttonHeight));
         otherButtons.add(addOtherButton("±", buttonWidth, yOffset + buttonHeight));
         otherButtons.add(addOtherButton("π", buttonWidth * 2, yOffset + buttonHeight));
@@ -147,7 +147,7 @@ public class CalculatorGui {
         otherButtons.add(equalsButton); // Special equals button
 
         otherButtons.get(0).addActionListener(e -> textField.setText(textField.getText() + ".")); // .
-        otherButtons.get(1).addActionListener(e -> textField.setText(textField.getText() + "%")); // %
+        otherButtons.get(1).addActionListener(e -> textField.setText(textField.getText() + "^2")); // x²
         otherButtons.get(2).addActionListener(e -> textField.setText("")); // C
         otherButtons.get(3).addActionListener(e -> {
             if (textField.getText().isEmpty()) return;
@@ -173,6 +173,7 @@ public class CalculatorGui {
         otherButtons.get(12).addActionListener(e -> textField.setText(MathUtils.evaluateExpression(textField.getText()))); // =
 
         otherButtons.forEach(button -> button.setFont(new Font(UIManager.getDefaults().getFont("Button.font").getName(), Font.PLAIN, 24)));
+        otherButtons.get(1).setFont(new Font("Times New Roman", Font.ITALIC, otherButtons.get(1).getFont().getSize()));
     }
 
     private JButton addOtherButton(String string, int x, int y) {
