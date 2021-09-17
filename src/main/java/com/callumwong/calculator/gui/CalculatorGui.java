@@ -1,11 +1,9 @@
 package com.callumwong.calculator.gui;
 
 import com.callumwong.calculator.Main;
-import com.callumwong.calculator.util.DigitFilter;
 import com.callumwong.calculator.util.MathUtils;
 
 import javax.swing.*;
-import javax.swing.text.PlainDocument;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -18,13 +16,12 @@ public class CalculatorGui {
     private final JFrame frame;
     private final ArrayList<JButton> numberButtons = new ArrayList<>();
     private final ArrayList<JButton> otherButtons = new ArrayList<>();
-    private JMenuBar menuBar;
     private JTextField textField;
-    private Timer resizeTimer = new Timer(400, null);
+    private final Timer resizeTimer = new Timer(400, null);
 
-    private int yOffset;
-    private int buttonWidth;
-    private int buttonHeight;
+    private final int yOffset;
+    private final int buttonWidth;
+    private final int buttonHeight;
 
     public CalculatorGui(String title, Dimension size, String contents) {
         frame = new JFrame();
@@ -69,7 +66,7 @@ public class CalculatorGui {
     }
 
     private void addMenuBar() {
-        menuBar = new JMenuBar();
+        JMenuBar menuBar = new JMenuBar();
 
         JMenu fileMenu = new JMenu("File");
         menuBar.add(fileMenu);
@@ -113,7 +110,7 @@ public class CalculatorGui {
 
             @Override
             public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_EQUALS || e.getKeyCode() == KeyEvent.VK_ENTER) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
                     textField.setText(MathUtils.evaluateExpression(textField.getText()));
                 } else if (e.getKeyCode() == KeyEvent.VK_C
                         || ((e.getKeyCode() == KeyEvent.VK_BACK_SPACE || e.getKeyCode() == KeyEvent.VK_DELETE)
