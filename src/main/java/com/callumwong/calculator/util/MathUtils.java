@@ -21,9 +21,4 @@ public class MathUtils {
         MathExpression expr = new MathExpression(expression.replace("x", "*").trim());
         return expr.parser_Result == Parser_Result.VALID;
     }
-
-    public static Parser_Result expressionParserResult(String expression) {
-        MathExpression expr = new MathExpression(expression.replace("x", "*").trim());
-        return expr.parser_Result;
-    }
 }

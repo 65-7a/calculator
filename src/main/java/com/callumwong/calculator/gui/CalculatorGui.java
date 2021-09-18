@@ -61,10 +61,6 @@ public class CalculatorGui {
         });
     }
 
-    public CalculatorGui(String title, Dimension size) {
-        this(title, size, "");
-    }
-
     private void addMenuBar() {
         JMenuBar menuBar = new JMenuBar();
 
@@ -102,7 +98,6 @@ public class CalculatorGui {
         });
         frame.getContentPane().add(backspaceButton);
 
-//        ((PlainDocument) textField.getDocument()).setDocumentFilter(new DigitFilter());
         textField.addKeyListener(new KeyListener() {
             @Override
             public void keyTyped(KeyEvent e) {
