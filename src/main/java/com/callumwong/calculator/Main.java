@@ -11,7 +11,7 @@ public class Main {
 
     private Main() {
         FlatDarculaLaf.setup();
-        gui = new CalculatorGui("Calculator", new Dimension(400, 600));
+        restartGui(new Dimension(400, 600), "");
     }
 
     public static Main getInstance() {
